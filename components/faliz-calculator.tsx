@@ -4,6 +4,7 @@ import * as Haptics from "expo-haptics";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Keyboard,
+  Linking,
   Modal,
   Platform,
   Pressable,
@@ -38,6 +39,20 @@ const C = {
   displayMute: "#66786C",
 };
 const HISTORY_KEY = "faliz-calculator-history-v1";
+const CREDITS: { label: string; url: string }[] = [
+  { label: "Threads", url: "https://www.threads.com/@ard.sing" },
+  { label: "Reddit", url: "https://www.reddit.com/u/gamesiteonline" },
+  { label: "Instagram", url: "https://www.instagram.com/ard.sing" },
+  {
+    label: "WhatsApp channel",
+    url: "https://whatsapp.com/channel/0029VbChyDUI1rcht5jajL3q",
+  },
+  {
+    label: "YouTube",
+    url: "https://youtube.com/@gamesiteonline?si=2qKZs5YUptHS6cTd",
+  },
+  { label: "Google Play Games", url: "https://my.play/gamesiteonline" },
+];
 type HistoryEntry = {
   id: string;
   expression: string;
@@ -131,6 +146,7 @@ export default function FalizCalculator() {
   const [angle, setAngle] = useState<AngleMode>("DEG");
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [showHistory, setShowHistory] = useState(false);
+  const [showCredits, setShowCredits] = useState(false);
   const [lastAnswer, setLastAnswer] = useState("");
   const [lastCalculation, setLastCalculation] = useState("");
   const [error, setError] = useState("");
@@ -474,11 +490,16 @@ export default function FalizCalculator() {
             </View>
           ))}
         </View>
-        <View style={s.footer}>
+        <Pressable
+          style={s.footer}
+          onPress={() => setShowCredits(true)}
+          accessibilityRole="button"
+          accessibilityLabel="Open credits and social links"
+        >
           <View style={s.footerLine} />
-          <Text style={s.footerText}>ENGINEERED FOR CLARITY</Text>
+          <Text style={s.footerText}>CREDITS & LINKS</Text>
           <View style={s.footerLine} />
-        </View>
+        </Pressable>
       </ScrollView>
       <Modal
         visible={showHistory}
@@ -589,6 +610,85 @@ export default function FalizCalculator() {
                 <Text style={s.clearHistoryText}>CLEAR HISTORY</Text>
               </Pressable>
             )}
+          </View>
+        </View>
+      </Modal>
+      <Modal
+        visible={showCredits}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setShowCredits(false)}
+      >
+        <View style={s.modalRoot}>
+          <Pressable
+            onPress={() => setShowCredits(false)}
+            style={s.modalScrim}
+            accessibilityRole="button"
+            accessibilityLabel="Close credits"
+          />
+          <View
+            style={[
+              s.historySheet,
+              s.creditsSheet,
+              { paddingBottom: Math.max(insets.bottom, 20) },
+            ]}
+          >
+            <View style={s.sheetHandle} />
+            <View style={s.sheetHeader}>
+              <View>
+                <Text style={s.sheetTitle}>Credits & links</Text>
+                <Text style={s.sheetSubtitle}>
+                  Connect with GamesiteOnline.
+                </Text>
+              </View>
+              <Pressable
+                style={s.sheetClose}
+                onPress={() => setShowCredits(false)}
+                accessibilityRole="button"
+                accessibilityLabel="Close credits"
+              >
+                <MaterialCommunityIcons
+                  name="close"
+                  size={20}
+                  color={C.ivory}
+                />
+              </Pressable>
+            </View>
+            <ScrollView showsVerticalScrollIndicator={false}>
+              {CREDITS.map(({ label, url }) => (
+                <Pressable
+                  key={label}
+                  onPress={() =>
+                    void Linking.openURL(url).catch(() => undefined)
+                  }
+                  style={({ pressed }) => [
+                    s.creditRow,
+                    pressed && { opacity: 0.72 },
+                  ]}
+                  accessibilityRole="link"
+                  accessibilityLabel={`${label}: ${url}`}
+                >
+                  <View style={s.creditIcon}>
+                    <MaterialCommunityIcons
+                      name="link-variant"
+                      size={17}
+                      color={C.teal}
+                    />
+                  </View>
+                  <View style={s.creditCopy}>
+                    <Text style={s.creditLabel}>{label}</Text>
+                    <Text numberOfLines={1} style={s.creditUrl}>
+                      {url}
+                    </Text>
+                  </View>
+                  <MaterialCommunityIcons
+                    name="open-in-new"
+                    size={16}
+                    color="#93A69A"
+                  />
+                </Pressable>
+              ))}
+            </ScrollView>
           </View>
         </View>
       </Modal>
@@ -713,12 +813,12 @@ const s = StyleSheet.create({
     elevation: 8,
   },
   instrumentInner: {
-    minHeight: 120,
+    minHeight: 190,
     borderRadius: 15,
     backgroundColor: C.display,
     paddingHorizontal: 15,
-    paddingTop: 10,
-    paddingBottom: 8,
+    paddingTop: 16,
+    paddingBottom: 14,
     borderTopWidth: 1.5,
     borderTopColor: "#F2F5E8",
     borderLeftWidth: 1,
@@ -755,7 +855,7 @@ const s = StyleSheet.create({
     minWidth: "100%",
     textAlign: "right",
     color: "#536A5B",
-    fontSize: 15,
+    fontSize: 19,
     fontWeight: "500",
     letterSpacing: 0.15,
     paddingVertical: 2,
@@ -774,7 +874,7 @@ const s = StyleSheet.create({
   resultEquals: { color: "#759183", fontSize: 16 },
   resultText: {
     color: C.displayInk,
-    fontSize: 33,
+    fontSize: 42,
     fontWeight: "600",
     letterSpacing: -0.7,
     flexShrink: 1,
@@ -911,7 +1011,7 @@ const s = StyleSheet.create({
   equalsText: { fontSize: 25, fontWeight: "700" },
   functionText: { color: "#D5DED7", fontSize: 11, fontWeight: "600" },
   footer: {
-    height: 23,
+    height: 44,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
@@ -946,6 +1046,7 @@ const s = StyleSheet.create({
     shadowRadius: 16,
     elevation: 14,
   },
+  creditsSheet: { maxHeight: "86%" },
   sheetHandle: {
     alignSelf: "center",
     width: 39,
@@ -967,6 +1068,28 @@ const s = StyleSheet.create({
     letterSpacing: -0.3,
   },
   sheetSubtitle: { color: "#9AA8A0", fontSize: 11, marginTop: 4 },
+  creditRow: {
+    minHeight: 58,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 11,
+    borderTopWidth: 1,
+    borderColor: "rgba(210,220,208,.1)",
+    paddingVertical: 8,
+  },
+  creditIcon: {
+    width: 34,
+    height: 34,
+    borderRadius: 11,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#34443F",
+    borderTopWidth: 1,
+    borderColor: "#52645B",
+  },
+  creditCopy: { flex: 1, minWidth: 0 },
+  creditLabel: { color: "#E7E3D8", fontSize: 12, fontWeight: "700" },
+  creditUrl: { color: "#94A49B", fontSize: 9, marginTop: 3 },
   sheetClose: {
     width: 35,
     height: 35,

@@ -6,7 +6,7 @@ import type { ExpoConfig } from "expo/config";
 // e.g., "my-app" created at 2024-01-15 10:30:45 -> "space.manus.my.app.t20240115103045"
 // Bundle ID can only contain letters, numbers, and dots
 // Android requires each dot-separated segment to start with a letter
-const rawBundleId = "space.manus.falizcalc.t116191108631008";
+const rawBundleId = "com.gamesiteonline.falizcalculator";
 const bundleId =
   rawBundleId
     .replace(/[-_]/g, ".") // Replace hyphens/underscores with dots
@@ -33,7 +33,7 @@ const env = {
   // S3 URL of the app logo - set this to the URL returned by generate_image when creating custom logo
   // Leave empty to use the default icon from assets/images/icon.png
   logoUrl:
-    "https://files.manuscdn.com/user_upload_by_module/session_file/310519663761359857/ZxytNwHdPokCKwXX.png",
+    "https://files.manuscdn.com/user_upload_by_module/session_file/310519663761359857/zmoMfLkzXhCpUdLX.jpg",
   scheme: schemeFromBundleId,
   iosBundleId: bundleId,
   androidPackage: bundleId,
@@ -62,7 +62,7 @@ const publicRuntime = {
 
 const config: ExpoConfig & { logoUrl: string } = {
   logoUrl:
-    "https://files.manuscdn.com/user_upload_by_module/session_file/310519663761359857/ZxytNwHdPokCKwXX.png",
+    "https://files.manuscdn.com/user_upload_by_module/session_file/310519663761359857/zmoMfLkzXhCpUdLX.jpg",
   name: env.appName,
   slug: env.appSlug,
   version: "1.0.0",
@@ -80,7 +80,7 @@ const config: ExpoConfig & { logoUrl: string } = {
   },
   android: {
     adaptiveIcon: {
-      backgroundColor: "#131D22",
+      backgroundColor: "#000000",
       foregroundImage: "./assets/images/android-icon-foreground.png",
       backgroundImage: "./assets/images/android-icon-background.png",
       monochromeImage: "./assets/images/android-icon-monochrome.png",
@@ -130,7 +130,7 @@ const config: ExpoConfig & { logoUrl: string } = {
         image: "./assets/images/splash-icon.png",
         imageWidth: 200,
         resizeMode: "contain",
-        backgroundColor: "#ffffff",
+        backgroundColor: "#000000",
         dark: {
           backgroundColor: "#000000",
         },
